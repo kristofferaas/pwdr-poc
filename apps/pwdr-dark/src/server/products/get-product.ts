@@ -1,16 +1,49 @@
 import { graphql } from "../graphql";
 import { crystallize } from "../crystallize";
+import { productSchema } from "./product-schema";
 
 export async function getProduct(path: string) {
-  return await crystallize.query(ProductQuery, {
+  const result = await crystallize.query(ProductQuery, {
     language: "en",
     path,
+  });
+
+  const product = result.catalogue;
+
+  if (!product) {
+    throw new Error("Product not found");
+  }
+
+  const components = "components" in product ? product.components : [];
+  const variants = "variants" in product ? product.variants : [];
+
+  // Get images from the first variant
+  const images = variants?.at(0)?.images?.map((img) => img.url) || [];
+
+  const descriptionComponent =
+    components?.find((c) => c.id === "description")?.content || {};
+
+  const description =
+    ("paragraphs" in descriptionComponent
+      ? descriptionComponent.paragraphs?.[0]?.body?.plainText
+      : []
+    )?.join(" ") || "";
+
+  return productSchema.parse({
+    id: product.id,
+    name: product.name,
+    path: product.path,
+    images,
+    description,
   });
 }
 
 const ProductQuery = graphql(`
   query ProductQuery($language: String!, $path: String!) {
     catalogue(language: $language, path: $path) {
+      id
+      name
+      path
       ... on Product {
         ...product
         topics {
