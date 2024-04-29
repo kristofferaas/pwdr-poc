@@ -106,7 +106,7 @@ export function ProductDetails() {
               You May Also Like
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              <ProductCard
+              {/* <ProductCard
                 href="/products/1"
                 title="Mountain Jacket"
                 description="A versatile jacket for all your outdoor adventures."
@@ -129,7 +129,7 @@ export function ProductDetails() {
                 title="Camping Gear"
                 description="Essential equipment for your next outdoor adventure."
                 price="$199.99"
-              />
+              /> */}
             </div>
           </div>
         </div>

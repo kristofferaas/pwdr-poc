@@ -72,7 +72,7 @@ export function LandingPage() {
             </p>
           </div>
           <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            <ProductCard
+            {/* <ProductCard
               description="Durable and flexible pants for your next outdoor adventure."
               href="/products/2"
               price="$59.99"
@@ -95,7 +95,7 @@ export function LandingPage() {
               href="/products/8"
               price="$199.99"
               title="Camping Gear"
-            />
+            /> */}
           </div>
         </div>
       </section>
