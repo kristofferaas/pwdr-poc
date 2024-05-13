@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ProductCard } from "./product-card";
+import placeholderSVG from "./placeholder.svg";
 
 export function LandingPage() {
   return (
@@ -10,7 +10,7 @@ export function LandingPage() {
             alt="Hero"
             className="mx-auto aspect-square overflow-hidden rounded-xl object-cover sm:w-full"
             height="550"
-            src="/placeholder.svg"
+            src={placeholderSVG.src}
             width="550"
           />
           <div className="space-y-4">
@@ -152,7 +152,7 @@ export function LandingPage() {
             alt="Sustainability"
             className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full"
             height="310"
-            src="/placeholder.svg"
+            src={placeholderSVG.src}
             width="550"
           />
         </div>

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { CardContent, Card } from "@/components/ui/card";
 import { ProductCard } from "./product-card";
 import { Product } from "@/server/products/product-schema";
+import placeholderSVG from "./placeholder.svg";
 
 export function ProductDetails({ product }: { product: Product }) {
   return (
@@ -13,7 +14,7 @@ export function ProductDetails({ product }: { product: Product }) {
               alt="Product Image"
               className="aspect-square rounded-lg object-cover"
               height="600"
-              src={product.images[0] || "/placeholder.svg"}
+              src={product.images[0] || placeholderSVG.src}
               width="600"
             />
           </div>
@@ -72,7 +73,7 @@ export function ProductDetails({ product }: { product: Product }) {
               alt="Product Details"
               className="aspect-video rounded-lg object-cover"
               height="310"
-              src="/placeholder.svg"
+              src={placeholderSVG.src}
               width="550"
             />
           </div>
