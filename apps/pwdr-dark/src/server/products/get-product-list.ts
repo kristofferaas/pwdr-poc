@@ -1,38 +1,69 @@
 import { graphql, FragmentOf } from "../graphql";
 import { crystallize } from "../crystallize";
 import { Product, ProductList, productListSchema } from "./product-schema";
+import { Locale } from "@/lib/i18n";
 
-export async function getProductList(path: string) {
+export async function getProductList(
+  path: string,
+  options: { locale: Locale }
+) {
   const result = await crystallize.query(ProductListQuery, {
-    language: "en",
+    language: options.locale,
     path,
   });
 
-  const products: ProductList = [];
+  const products: unknown[] = [];
 
-  for (const product of result.catalogue?.children || []) {
-    const components = "components" in product ? product.components : [];
-    const variants = "variants" in product ? product.variants : [];
+  for (const productOrFolder of result.catalogue?.children || []) {
+    if (productOrFolder.type === "folder") {
+      const folder = productOrFolder;
+      const components = "components" in folder ? folder.components : [];
 
-    // Get images from the first variant
-    const images = variants?.at(0)?.images?.map((img) => img.url) || [];
+      const imagesComponent = components?.find((c) => c.type === "images");
+      const images =
+        imagesComponent &&
+        "content" in imagesComponent &&
+        imagesComponent.content?.__typename === "ImageContent"
+          ? imagesComponent.content.images
+          : null;
 
-    const descriptionComponent =
-      components?.find((c) => c.id === "description")?.content || {};
 
-    const description =
-      ("paragraphs" in descriptionComponent
-        ? descriptionComponent.paragraphs?.[0]?.body?.plainText
-        : []
-      )?.join(" ") || "";
+      products.push({
+        id: folder.id,
+        name: folder.name,
+        path: folder.path,
+        images: images?.map((img) => img.url) || [],
+      });
+    }
+    if (productOrFolder.type === "product") {
+      const product = productOrFolder;
+      const components = "components" in product ? product.components : [];
+      const variants = "variants" in product ? product.variants : [];
 
-    products.push({
-      id: product.id,
-      name: product.name,
-      path: product.path,
-      images,
-      description,
-    } as Product);
+      // Get images from the first variant
+      const images = variants?.at(0)?.images?.map((img) => img.url) || [];
+
+      // Get price from the first variant
+      const price = variants?.at(0)?.price;
+
+      const descriptionComponent =
+        components?.find((c) => c.id === "description")?.content || {};
+
+      const description =
+        ("paragraphs" in descriptionComponent
+          ? descriptionComponent.paragraphs?.[0]?.body?.plainText
+          : []
+        )?.join(" ") || "";
+
+      products.push({
+        id: product.id,
+        name: product.name,
+        path: product.path,
+        price,
+        images,
+        description,
+      });
+    }
   }
 
   return productListSchema.parse(products);
@@ -45,11 +76,17 @@ const ProductListQuery = graphql(`
         id
         name
         path
+        type
         ... on Product {
           ...product
           topics {
             path
             name
+          }
+        }
+        ... on Folder {
+          components {
+            ...component
           }
         }
       }
@@ -96,6 +133,7 @@ const ProductListQuery = graphql(`
   }
 
   fragment imageContent on ImageContent {
+    __typename
     images {
       ...image
     }

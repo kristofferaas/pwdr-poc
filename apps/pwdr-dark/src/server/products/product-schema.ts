@@ -4,8 +4,9 @@ export const productSchema = z.object({
   id: z.string(),
   path: z.string(),
   name: z.string(),
-  description: z.string(),
+  description: z.string().optional(),
   images: z.array(z.string().url()),
+  price: z.number().optional(),
 });
 
 export type Product = z.infer<typeof productSchema>;

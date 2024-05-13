@@ -1,9 +1,10 @@
+import { Locale } from "@/lib/i18n";
 import { crystallize } from "../crystallize";
 import { graphql } from "../graphql";
 
-export async function getContent(path: string) {
+export async function getContent(path: string, options: { locale: Locale }) {
   const result = await crystallize.query(StructureQuery, {
-    language: "en",
+    language: options.locale,
     path,
   });
 

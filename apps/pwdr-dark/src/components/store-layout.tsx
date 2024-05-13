@@ -1,6 +1,15 @@
+import { Locale, getDictionary } from "@/lib/i18n";
 import Link from "next/link";
 
-export function StoreLayout({ children }: { children: React.ReactNode }) {
+export async function StoreLayout({
+  locale,
+  children,
+}: {
+  locale: Locale;
+  children: React.ReactNode;
+}) {
+  const dict = await getDictionary(locale);
+
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <header className="px-4 lg:px-6 h-14 flex items-center">
@@ -11,27 +20,33 @@ export function StoreLayout({ children }: { children: React.ReactNode }) {
         <nav className="ml-auto flex gap-4 sm:gap-6">
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
-            href="/products"
+            href={`/${locale}/shop`}
           >
-            Products
+            {dict.products}
           </Link>
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
             href="#"
           >
-            About
+            {dict.about}
           </Link>
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
             href="#"
           >
-            Sustainability
+            {dict.sustainability}
           </Link>
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
             href="#"
           >
-            Contact
+            {dict.contact}
+          </Link>
+          <Link
+            className="text-sm font-medium hover:underline underline-offset-4"
+            href={locale === "en" ? "/no" : "/en"}
+          >
+            {locale === "en" ? "🇬🇧" : "🇳🇴"}
           </Link>
         </nav>
       </header>

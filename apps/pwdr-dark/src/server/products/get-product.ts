@@ -1,10 +1,11 @@
 import { graphql } from "../graphql";
 import { crystallize } from "../crystallize";
 import { productSchema } from "./product-schema";
+import { Locale } from "@/lib/i18n";
 
-export async function getProduct(path: string) {
+export async function getProduct(path: string, options: { locale: Locale }) {
   const result = await crystallize.query(ProductQuery, {
-    language: "en",
+    language: options.locale,
     path,
   });
 
@@ -20,6 +21,9 @@ export async function getProduct(path: string) {
   // Get images from the first variant
   const images = variants?.at(0)?.images?.map((img) => img.url) || [];
 
+  // Get price from the first variant
+  const price = variants?.at(0)?.price;
+
   const descriptionComponent =
     components?.find((c) => c.id === "description")?.content || {};
 
@@ -33,6 +37,7 @@ export async function getProduct(path: string) {
     id: product.id,
     name: product.name,
     path: product.path,
+    price,
     images,
     description,
   });

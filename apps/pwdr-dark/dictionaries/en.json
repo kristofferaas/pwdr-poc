@@ -1,0 +1,13 @@
+{
+  "products": "Products",
+  "about": "About",
+  "sustainability": "Sustainability",
+  "contact": "Contact",
+  "products-title": "Outdoor Essentials",
+  "products-subtitle": "Discover the perfect gear for your next adventure",
+  "action": {
+    "filter": "Filter",
+    "sort": "Sort",
+    "filter-sort": "Filter & Sort"
+  }
+}
